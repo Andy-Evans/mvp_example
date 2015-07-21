@@ -8,7 +8,7 @@ namespace Domain.Presenters
         private readonly ICheckOutRepository _checkOutRepository;
         private readonly ICheckOutView _checkOutView;
 
-        public CheckOutPresenter(ICheckOutRepository checkOutRepository, ICheckOutView checkOutView)
+        public CheckOutPresenter(ICheckOutView checkOutView,ICheckOutRepository checkOutRepository)
         {
             _checkOutRepository = checkOutRepository;
             _checkOutView = checkOutView;
@@ -16,7 +16,12 @@ namespace Domain.Presenters
 
         public void GetItemsOrderedByPrice()
         {
-            _checkOutView.CheckoutItems= _checkOutRepository.GetItems().OrderBy(o => o.Price ).ToList();
+            _checkOutView.CheckoutItems = _checkOutRepository.GetItems().OrderBy(o => o.Price ).ToList();
+        }
+
+        public void GetRunningTotal()
+        {
+            _checkOutView.RunningTotal = _checkOutRepository.GetItems().Sum(x => x.Price);
         }
     }
 }

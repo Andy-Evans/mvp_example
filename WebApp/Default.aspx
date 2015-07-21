@@ -6,6 +6,7 @@
     <body>
         <form id="form1" runat="server">
             <asp:ListBox ID="CheckoutList" runat="server"></asp:ListBox>
+            <asp:Label ID="CheckoutTotal" runat="server"></asp:Label>
         </form>
     </body>
 </html>

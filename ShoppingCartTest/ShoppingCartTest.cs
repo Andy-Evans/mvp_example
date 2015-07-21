@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Domain;
+﻿using System;
+using System.Collections.Generic;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Presenters;
@@ -13,9 +13,14 @@ namespace ShoppingCartTest
         [TestMethod]
         public void CheckListContainsItems()
         {
+            //Arrange
             var view = new MockedCheckOutView();
-            var presenter = new CheckOutPresenter(new MockedCheckOutRepository(),view);
-             presenter.GetItemsOrderedByPrice(); 
+            var presenter = new CheckOutPresenter(view, new MockedCheckOutRepository());
+
+            //Act
+            presenter.GetItemsOrderedByPrice();
+
+             //Assert
             Assert.IsTrue(view.CheckoutItems.Count > 0);
             
         }
@@ -23,13 +28,44 @@ namespace ShoppingCartTest
         [TestMethod]
         public void CheckListIsOrderedByPrice()
         {
+            //Arrange
             var view = new MockedCheckOutView();
-            var presenter = new CheckOutPresenter(new MockedCheckOutRepository(), view);
-             presenter.GetItemsOrderedByPrice();
-             Assert.IsTrue(view.CheckoutItems.Count > 0);
-             Assert.AreEqual(view.CheckoutItems[0].Price, 10.50m);
-             Assert.AreEqual(view.CheckoutItems[1].Price, 188.50m);
-             Assert.AreEqual(view.CheckoutItems[2].Price, 200.50m);
+            var presenter = new CheckOutPresenter(view, new MockedCheckOutRepository());
+
+            //Act
+            presenter.GetItemsOrderedByPrice();
+
+            //Assert
+            Assert.IsTrue(view.CheckoutItems.Count > 0);
+            Assert.AreEqual(0.50m, view.CheckoutItems[0].Price);
+            Assert.AreEqual(1.50m, view.CheckoutItems[1].Price);
+            Assert.AreEqual(2.75m, view.CheckoutItems[2].Price);
+            Assert.AreEqual(4.20m, view.CheckoutItems[3].Price);
+        }
+
+        [TestMethod]
+        public void RunningTotalIsZeroForEmptyBasket()
+        {
+            //Arrange
+            var view = new MockedCheckOutView();
+
+            //Assert
+            Assert.AreEqual(0, view.RunningTotal);
+        }
+
+
+        [TestMethod]
+        public void CheckRunningTotalForBasketWithItems()
+        {
+            //Arrange
+            var view = new MockedCheckOutView();
+            var presenter = new CheckOutPresenter(view, new MockedCheckOutRepository());
+
+            //Act
+            presenter.GetRunningTotal();
+
+            //Assert
+            Assert.AreEqual(8.95m, view.RunningTotal);
         }
     }
 
@@ -37,15 +73,17 @@ namespace ShoppingCartTest
     {
         public List<Item> GetItems()
         {
-                return new List<Item> { 
-                    new Item { Description = "Bread", Price = 10.50m }, 
-                    new Item { Description = "Milk", Price = 200.50m }, 
-                    new Item{Description = "Butter", Price = 188.50m} };
+            return new List<Item> { 
+                new Item { Description = "Bread", Price = 1.50m }, 
+                new Item { Description = "Milk", Price = 0.50m }, 
+                new Item { Description = "Butter", Price = 2.75m},
+                new Item { Description = "Crackers", Price = 4.20m}};
         }
     }
 
     public class MockedCheckOutView:ICheckOutView
     {
         public List<Item> CheckoutItems { get; set; }
+        public Decimal RunningTotal { get; set; }
     }
 }
