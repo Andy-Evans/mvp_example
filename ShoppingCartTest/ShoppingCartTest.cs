@@ -74,10 +74,7 @@ namespace ShoppingCartTest
         public List<Item> GetItems()
         {
             return new List<Item> { 
-                new Item { Description = "Bread", Price = 1.50m }, 
-                new Item { Description = "Milk", Price = 0.50m }, 
-                new Item { Description = "Butter", Price = 2.75m},
-                new Item { Description = "Crackers", Price = 4.20m}};
+                new Item { Description = "Bread", Price = 1.50m }};
         }
     }
 
